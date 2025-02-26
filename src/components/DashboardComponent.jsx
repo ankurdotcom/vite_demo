@@ -1,22 +1,30 @@
+import { useState, useEffect } from "react";
 import UserComponent from "./UserComponent";
+import UserDetailComponent from "./UserDetailComponent";
 
 function DashboardComponent() {
-   
-    const user = { "name": "ankur", "profession": "engineer" };
-    const user2 = { "name": "ambar", "profession": "engineer-2" };
-    const user3 = { "name": "arav", "profession": "engineer-3" };
 
-    const userList = [];
-    userList.push(user);
-    userList.push(user2);
-    userList.push(user3);
+    const[ selectedUser, setSelectedUser] = useState(null);
+    const [ userList, setuserList] = useState([]);
+   
+    useEffect(() => {
+        fetch("https://jsonplaceholder.typicode.com/users") // Fake API call
+            .then((response) => response.json())
+            .then((data) => setuserList(data)); // Store the user data
+    }, []); // Empty [] means run only once
+
 
     return (
         <>
             {
                 userList.map(
-                    (usr) => <UserComponent user={usr}/>
+                    (usr) => <UserComponent user={usr} onUserClick={() => setSelectedUser(usr)}/>
                 )
+                
+            }
+
+            {
+                (selectedUser &&  < UserDetailComponent selectedUser={selectedUser}/>)
             }
 
         </>
